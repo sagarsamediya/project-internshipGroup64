@@ -20,7 +20,9 @@ const collegeModel = new mongoose.Schema({
 
      },
 
-      isDeleted: {boolean, default: false} 
+      isDeleted: {
+        type:Boolean, 
+        default: false} 
 
 }, {timestamps: true })
 
