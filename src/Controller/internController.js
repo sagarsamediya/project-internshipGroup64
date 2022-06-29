@@ -16,6 +16,10 @@ const validateEmail = function (mail) {
     }
 };
 
+const validateMobile = function(number) {
+    if(/^[0-9]+$/.test(number)) return true
+}
+
 const regex = /\d/;
 const isVerifyString = function (string) {
     return regex.test(string)
@@ -51,6 +55,8 @@ const createInterns = async function (req, res) {
         if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
 
         //validation for mobile number length and unique number
+        data.mobile = data.mobile.trim()
+        if(!validateMobile(data.mobile.trim())) return res.status(400).send({status:false, message:"mobile can't contain albhabets"})
         if(data.mobile.length!=10){
             return res.status(400).send({status:false,message:"Number should be of 10 digits"})
         }
