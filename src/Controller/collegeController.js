@@ -3,10 +3,6 @@ const isBodyExist = function(data){
    return Object.keys(data).length>0
 }
 
-const isEmpty = function(data){
-    if(data!=" ") return false
-    else return true
-}
 const createCollege = async function(req,res){
     try{
         
