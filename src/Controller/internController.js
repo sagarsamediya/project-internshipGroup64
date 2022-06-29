@@ -60,7 +60,7 @@ const createInterns = async function (req, res) {
         
         //
         let collegeData = await collegeModel.findOne({name:data.collegeName})
-        if(Object.keys(collegeData).length<1) return res.status(404).send({status:false,message:"The college doesn't exist"})
+        if(!collegeData) return res.status(404).send({status:false,message:`${data.collegeName} doesn't exist`})
 
         data.collegeId = collegeData.id
         delete data.collegeName
