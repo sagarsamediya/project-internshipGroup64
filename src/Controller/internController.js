@@ -16,6 +16,10 @@ const validateEmail = function (mail) {
     }
 };
 
+const validateMobile = function(number) {
+    if(/^[0-9]+$/.test(number)) return true
+}
+
 const regex = /\d/;
 const isVerifyString = function (string) {
     return regex.test(string)
@@ -28,7 +32,7 @@ const createInterns = async function (req, res) {
         if (!isBodyExist(data)) {
             return res.status(400).send({ status: false, message: "Body can't be empty" })
         }
-
+        Object.keys(data).forEach(x => data[x]=data[x].trim())
         //validation for key should exist
         if (!data.name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!data.email) return res.status(400).send({ status: false, msg: "email is required" })
@@ -51,6 +55,8 @@ const createInterns = async function (req, res) {
         if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
 
         //validation for mobile number length and unique number
+    
+        if(!validateMobile(data.mobile.trim())) return res.status(400).send({status:false, message:"mobile can't contain albhabets"})
         if(data.mobile.length!=10){
             return res.status(400).send({status:false,message:"Number should be of 10 digits"})
         }
@@ -60,7 +66,7 @@ const createInterns = async function (req, res) {
         
         //
         let collegeData = await collegeModel.findOne({name:data.collegeName})
-        if(Object.keys(collegeData).length<1) return res.status(404).send({status:false,message:"The college doesn't exist"})
+        if(!collegeData) return res.status(404).send({status:false,message:`${data.collegeName} doesn't exist`})
 
         data.collegeId = collegeData.id
         delete data.collegeName
