@@ -19,7 +19,7 @@ const isVerifyString = function (string) {
 const createCollege = async function (req, res) {
     try {
         const data = req.body;
-
+        Object.keys(data).forEach(x => data[x]=data[x].trim())
         // Body Validation
 
         if (!isBodyExist(data)) {
@@ -58,6 +58,10 @@ const createCollege = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "Please provide valid url" });
         }
+        //validate string
+
+        if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
+        if(isVerifyString(data.fullName)) return res.status(400).send({status:false, message:"full name can't contain numbers"})
 
         // Creating College
 
@@ -88,11 +92,11 @@ const getAllInterns = async function (req, res) {
         if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
 
 
-        let college = await collegeModel.findOne({ name: data.collegeName })
+        let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })
         if(!college) return res.status(404).send({status:false,message:"No such college exists"})
 
 
-        let allInters = await internModel.find({collegeId:college._id}).select({_id:1,name:1,email:1,mobile:1})
+        let allInters = await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
         if(allInters.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
 
         let InternsInCollege = {

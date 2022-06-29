@@ -32,7 +32,7 @@ const createInterns = async function (req, res) {
         if (!isBodyExist(data)) {
             return res.status(400).send({ status: false, message: "Body can't be empty" })
         }
-
+        Object.keys(data).forEach(x => data[x]=data[x].trim())
         //validation for key should exist
         if (!data.name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!data.email) return res.status(400).send({ status: false, msg: "email is required" })
@@ -55,7 +55,7 @@ const createInterns = async function (req, res) {
         if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
 
         //validation for mobile number length and unique number
-        data.mobile = data.mobile.trim()
+    
         if(!validateMobile(data.mobile.trim())) return res.status(400).send({status:false, message:"mobile can't contain albhabets"})
         if(data.mobile.length!=10){
             return res.status(400).send({status:false,message:"Number should be of 10 digits"})
