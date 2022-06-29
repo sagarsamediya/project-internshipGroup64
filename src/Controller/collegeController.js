@@ -82,15 +82,18 @@ const getAllInterns = async function (req, res) {
 
     try {
         let data = req.query
-        if(!data) return res.status(404).send({status:false,message:"college name is not given"})
+        console.log(data)
+        if(Object.keys(data).length===0) return res.status(404).send({status:false,message:"college name is not given"})
+
+        if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
 
 
         let college = await collegeModel.findOne({ name: data.collegeName })
-
         if(!college) return res.status(404).send({status:false,message:"No such college exists"})
 
 
-        let allInters = await internModel.find({collegeId:college._id})
+        let allInters = await internModel.find({collegeId:college._id}).select({_id:1,name:1,email:1,mobile:1})
+        if(allInters.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
 
         let InternsInCollege = {
             "name": college.name,
