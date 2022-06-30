@@ -25,7 +25,9 @@ const isVerifyString = function (string) {
     return regex.test(string)
 };
 
+
 //<==============================================create Intern ================================>
+
 
 const createInterns = async function (req, res) {
     try {
@@ -34,7 +36,9 @@ const createInterns = async function (req, res) {
         if (!isBodyExist(data)) {
             return res.status(400).send({ status: false, message: "Body can't be empty" })
         }
+
         
+
         //validation for key should exist
         if (!data.name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!data.email) return res.status(400).send({ status: false, msg: "email is required" })
@@ -53,7 +57,9 @@ const createInterns = async function (req, res) {
         //validation for unique email and email structure
         if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
 
+
         //if email is already present in the database collection
+
         if(await internModel.findOne({email:data.email})){
             return res.status(400).send({status:false, message:"Email already exists. Please give another one"})
         }
@@ -65,14 +71,18 @@ const createInterns = async function (req, res) {
             return res.status(400).send({status:false,message:"Number should be of 10 digits"})
         }
 
+
         //if mobile number is already present in the database collection
+
         if(await internModel.findOne({mobile:data.mobile})){
             return res.status(400).send({status:false, message:"Mobile number already exists. Please give another one"})
         }
         
+
         
         let collegeData = await collegeModel.findOne({name:data.collegeName})
         if(!collegeData) return res.status(404).send({status:false,message:`${data.collegeName} college doesn't exist`})
+
 
         data.collegeId = collegeData._id
         delete data.collegeName

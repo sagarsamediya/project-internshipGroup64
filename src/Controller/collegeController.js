@@ -17,6 +17,7 @@ const isVerifyString = function (string) {
     return regex.test(string)
 };
 
+
 //<=================================create College============================>
 
 const createCollege = async function (req, res) {
@@ -30,11 +31,16 @@ const createCollege = async function (req, res) {
         const { name, fullName, logoLink } = data;
         data.name= (data.name).toUpperCase()
         
+
+
+   
+
         if (!data.name) return res.status(400).send({ status: false, message: "name is required" })
         if (!data.fullName) return res.status(400).send({ status: false, message: "fullName is required" })
         if (!data.logoLink) return res.status(400).send({ status: false, message: "logoLink is required" })
 
         // Validation Starts
+
         if (!isValid(data.name)) {return res.status(400).send({ status: false, message: "Please provide valid college name" });}
        
         //checking for name and fullname must be string
@@ -50,6 +56,7 @@ const createCollege = async function (req, res) {
         if (!isValid(logoLink)) {return res.status(400).send({ status: false, message: "Please provide valid url" });}
 
         // Creating the College 
+
 
         const college = await collegeModel.create(data);
 
@@ -77,6 +84,7 @@ const getAllInterns = async function (req, res) {
 
         if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
 
+
       //finding the college in the database collection by collegeName
         let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })
         if(!college) return res.status(404).send({status:false,message:"No such college exists"})
@@ -86,6 +94,7 @@ const getAllInterns = async function (req, res) {
         if(allInters.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
 
         //return the college details along with the interns details in the responce
+
         let InternsInCollege = {
             "name": college.name,
             "fullName": college.fullName,
@@ -100,6 +109,7 @@ const getAllInterns = async function (req, res) {
     }
 
 }
+
 
 module.exports.createCollege = createCollege
 module.exports.getAllInterns = getAllInterns
