@@ -16,7 +16,7 @@ const internModel = new mongoose.Schema({
       mobile: {
         type: String,
         required: "Email is required",
-        unquie: true
+        unique: true
       }, 
 
       collegeId: {
