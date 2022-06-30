@@ -29,15 +29,17 @@ const createCollege = async function (req, res) {
 
         // Destructuring body
         const { name, fullName, logoLink } = data;
-        data.name= (data.name).toUpperCase()
-        
-
-
-   
-
+       
         if (!data.name) return res.status(400).send({ status: false, message: "name is required" })
         if (!data.fullName) return res.status(400).send({ status: false, message: "fullName is required" })
         if (!data.logoLink) return res.status(400).send({ status: false, message: "logoLink is required" })
+
+        if(typeof data.name == 'number') return res.status(400).send({status:false, message:"name can't contain number"})
+       
+        if (!isValid(data.name)) {return res.status(400).send({ status: false, message: "Please provide valid college name" });}
+        
+        data.name= (data.name).toUpperCase()
+       
 
         // Validation Starts
 
@@ -46,6 +48,9 @@ const createCollege = async function (req, res) {
         //checking for name and fullname must be string
         if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
         if(isVerifyString(data.fullName)) return res.status(400).send({status:false, message:"full name can't contain numbers"})
+        if(typeof data.logoLink == 'number') return res.status(400).send({status:false, message:"Please provide valid url"})
+        
+
 
         //is college Name is already present in collection
         let checkName = await collegeModel.findOne({ name: data.name })
@@ -83,7 +88,7 @@ const getAllInterns = async function (req, res) {
         if(Object.keys(data).length===0) return res.status(404).send({status:false,message:"college name is not given"})
 
         if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
-
+         data.collegeName = (data.collegeName).toUpperCase()
 
       //finding the college in the database collection by collegeName
         let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })

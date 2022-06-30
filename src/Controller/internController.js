@@ -43,7 +43,7 @@ const createInterns = async function (req, res) {
         if (!data.name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!data.email) return res.status(400).send({ status: false, msg: "email is required" })
         if (!data.mobile) return res.status(400).send({ status: false, msg: "mobile is required" })
-        if (!data.collegeName) return res.status(400).send({ status: false, msg: "collegeId is required" })
+        if (!data.collegeName) return res.status(400).send({ status: false, msg: "collegeName is required" })
 
         //validation for invalid or empty data
         if (!isValid(data.name)) return res.status(400).send({ status: false, message: "invalid name" })
@@ -78,7 +78,9 @@ const createInterns = async function (req, res) {
             return res.status(400).send({status:false, message:"Mobile number already exists. Please give another one"})
         }
         
+        if(typeof data.collegeName == 'number') return res.status(400).send({status:false, message:"collegeName can't contain number"})
 
+        data.collegeName = (data.collegeName).toUpperCase()
         
         let collegeData = await collegeModel.findOne({name:data.collegeName})
         if(!collegeData) return res.status(404).send({status:false,message:`${data.collegeName} college doesn't exist`})
