@@ -32,4 +32,4 @@ const internModel = new mongoose.Schema({
 
 }, {timestamps: true })
 
-module.exports = mongoose.moderl("intern", internModel)
+module.exports = mongoose.model("intern", internModel)
