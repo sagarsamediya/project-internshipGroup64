@@ -32,7 +32,7 @@ const createInterns = async function (req, res) {
         if (!isBodyExist(data)) {
             return res.status(400).send({ status: false, message: "Body can't be empty" })
         }
-        Object.keys(data).forEach(x => data[x]=data[x].trim())
+        // Object.keys(data).forEach(x => data[x]=data[x].trim())
         //validation for key should exist
         if (!data.name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!data.email) return res.status(400).send({ status: false, msg: "email is required" })

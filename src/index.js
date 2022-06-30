@@ -17,6 +17,6 @@ mongoose.connect("mongodb+srv://SagarSamediya:sagar@cluster0.p5frd.mongodb.net/g
 
 app.use('/', route);
 
-app.listen(process.env.PORT || 4000, function () {
-    console.log('Express app running on port ' + (process.env.PORT || 4000))
+app.listen(process.env.PORT || 3000, function () {
+    console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
