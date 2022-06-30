@@ -18,52 +18,44 @@ const isVerifyString = function (string) {
 };
 
 
+//<=================================create College============================>
+
 const createCollege = async function (req, res) {
     try {
-      const data = req.body;
-  
-      // Body Validation
-  
-      if (!isBodyExist(data)) {
-        return res
-          .status(400)
-          .send({ status: false, message: "Please provide college details" });
-      }
+        const data = req.body;
       
-        // Destructuring body
+        // // Body Validation
+        if (!isBodyExist(data)) {return res.status(400).send({ status: false, message: "Please provide college details" });}
 
+        // Destructuring body
         const { name, fullName, logoLink } = data;
+        data.name= (data.name).toUpperCase()
+        
+
+
+   
 
         if (!data.name) return res.status(400).send({ status: false, message: "name is required" })
         if (!data.fullName) return res.status(400).send({ status: false, message: "fullName is required" })
         if (!data.logoLink) return res.status(400).send({ status: false, message: "logoLink is required" })
 
         // Validation Starts
-        if (!isValid(name)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Please provide valid college name" });
-        }
 
+        if (!isValid(data.name)) {return res.status(400).send({ status: false, message: "Please provide valid college name" });}
+       
+        //checking for name and fullname must be string
+        if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
+        if(isVerifyString(data.fullName)) return res.status(400).send({status:false, message:"full name can't contain numbers"})
+
+        //is college Name is already present in collection
         let checkName = await collegeModel.findOne({ name: data.name })
         if (checkName) return res.status(400).send({ status:false,message: "College Name already exist" })
 
-        if (!isValid(fullName)) {
-            return res.status(400).send({
-                status: false,
-                message: "Please provide valid fullName of the college",
-            });
-        }
+        if (!isValid(fullName)) {return res.status(400).send({status: false,message: "Please provide valid fullName of the college",});}
 
-        if (!isValid(logoLink)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Please provide valid url" });
-        }
-        //validate string
+        if (!isValid(logoLink)) {return res.status(400).send({ status: false, message: "Please provide valid url" });}
 
-        if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
-        if(isVerifyString(data.fullName)) return res.status(400).send({status:false, message:"full name can't contain numbers"})
+        // Creating the College 
 
 
       // Creating College
@@ -92,19 +84,22 @@ const getAllInterns = async function (req, res) {
       if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
 
 
-      let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })
-      if(!college) return res.status(404).send({status:false,message:"No such college exists"})
+      //finding the college in the database collection by collegeName
+        let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })
+        if(!college) return res.status(404).send({status:false,message:"No such college exists"})
 
+      //finding the interns in the college by CollegeId 
+        let allInters = await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
+        if(allInters.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
 
-      let allInterns = await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
-      if(allInterns.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
+        //return the college details along with the interns details in the responce
 
-      let InternsInCollege = {
-          "name": college.name,
-          "fullName": college.fullName,
-          "logoLink": college.logoLink,
-          "interns": allInterns
-      }
+        let InternsInCollege = {
+            "name": college.name,
+            "fullName": college.fullName,
+            "logoLink": college.logoLink,
+            "interns": allInters
+        }
 
       res.status(200).send({status:true,data:InternsInCollege})
   }
@@ -115,7 +110,6 @@ const getAllInterns = async function (req, res) {
 }
 
     
-
 
 
 module.exports.createCollege = createCollege
