@@ -10,12 +10,12 @@ const internModel = new mongoose.Schema({
      email: {
         type: String,
         required: "Email is required",
-        unquie: true
+        unique: true
     },
 
       mobile: {
         type: String,
-        required: "Email is required",
+        required: "Mobile is required",
         unique: true
       }, 
 

@@ -1,8 +1,8 @@
 const collegeModel = require("../Model/collegeModel")
 const internModel = require("../Model/internModel")
 
-const isBodyExist = function(data){
-   return Object.keys(data).length>0
+const isBodyExist = function (data) {
+    return Object.keys(data).length > 0
 }
 
 const isValid = function (value) {
@@ -45,8 +45,8 @@ const createCollege = async function (req, res) {
           .send({ status: false, message: "Please provide valid college name" });
       }
   
-      let checkName = await collegeModel.findOne({ name: data.name })
-              if (checkName) return res.status(400).send({ msg: "College Name already exist" })
+      // let checkName = await collegeModel.findOne({ name: data.name })
+      //         if (checkName) return res.status(400).send({ msg: "College Name already exist" })
   
       if (!isValid(fullName)) {
         return res.status(400).send({
@@ -61,7 +61,39 @@ const createCollege = async function (req, res) {
           .send({ status: false, message: "Please provide valid url" });
       }
 
-      if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
+        // Destructuring body
+
+        const { name, fullName, logoLink } = data;
+
+        if (!data.name) return res.status(400).send({ status: false, message: "name is required" })
+        if (!data.fullName) return res.status(400).send({ status: false, message: "fullName is required" })
+        if (!data.logoLink) return res.status(400).send({ status: false, message: "logoLink is required" })
+
+        // Validation Starts
+        if (!isValid(name)) {
+            return res
+                .status(400)
+                .send({ status: false, message: "Please provide valid college name" });
+        }
+
+        let checkName = await collegeModel.findOne({ name: data.name })
+        if (checkName) return res.status(400).send({ status:false,message: "College Name already exist" })
+
+        if (!isValid(fullName)) {
+            return res.status(400).send({
+                status: false,
+                message: "Please provide valid fullName of the college",
+            });
+        }
+
+        if (!isValid(logoLink)) {
+            return res
+                .status(400)
+                .send({ status: false, message: "Please provide valid url" });
+        }
+        //validate string
+
+        if(isVerifyString(data.name)) return res.status(400).send({status:false, message:"name can't contain numbers"})
         if(isVerifyString(data.fullName)) return res.status(400).send({status:false, message:"full name can't contain numbers"})
 
 
@@ -83,10 +115,10 @@ const createCollege = async function (req, res) {
 
 const getAllInterns = async function (req, res) {
 
-  try {
-      let data = req.query
-      // console.log(data)
-      if(Object.keys(data).length===0) return res.status(404).send({status:false,message:"college name is not given"})
+    try {
+        let data = req.query
+        
+        if(Object.keys(data).length===0) return res.status(404).send({status:false,message:"college name is not given"})
 
       if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
 

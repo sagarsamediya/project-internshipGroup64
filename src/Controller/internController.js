@@ -49,10 +49,11 @@ const createInterns = async function (req, res) {
         if (isVerifyString(data.name)) return res.status(400).send({ status: false, message: "name can not contain digits" })
 
         //validation for unique email and email structure
+        if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
+
         if(await internModel.findOne({email:data.email})){
             return res.status(400).send({status:false, message:"Email already exists. Please give another one"})
         }
-        if(!validateEmail(data.email)) return res.status(400).send({status:false, message:"emailId is not valid"})
 
         //validation for mobile number length and unique number
     
@@ -68,7 +69,7 @@ const createInterns = async function (req, res) {
         let collegeData = await collegeModel.findOne({name:data.collegeName})
         if(!collegeData) return res.status(404).send({status:false,message:`${data.collegeName} doesn't exist`})
 
-        data.collegeId = collegeData.id
+        data.collegeId = collegeData._id
         delete data.collegeName
        
         let college = await internModel.create(data)
