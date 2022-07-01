@@ -89,8 +89,8 @@ const getAllInterns = async function (req, res) {
         if(!college) return res.status(404).send({status:false,message:"No such college exists"})
 
       //finding the interns in the college by CollegeId 
-        let allInters = await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
-        if(allInters.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
+        let allInterns = await internModel.find({collegeId:college._id,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
+        if(allInterns.length===0) return res.status(404).send({status:false,message:"No interns in this college"})
 
         //return the college details along with the interns details in the responce
 
@@ -98,7 +98,7 @@ const getAllInterns = async function (req, res) {
             "name": college.name,
             "fullName": college.fullName,
             "logoLink": college.logoLink,
-            "interns": allInters
+            "interns": allInterns
         }
 
       res.status(200).send({status:true,data:InternsInCollege})

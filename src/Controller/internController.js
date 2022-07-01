@@ -1,5 +1,6 @@
 const internModel = require("../Model/internModel")
 const collegeModel = require("../Model/collegeModel")
+
 const isBodyExist = function (data) {
     return Object.keys(data).length > 0
 }
