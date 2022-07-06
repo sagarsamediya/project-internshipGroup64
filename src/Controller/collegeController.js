@@ -86,13 +86,8 @@ const getAllInterns = async function (req, res) {
         
         if(Object.keys(data).length===0) return res.status(400).send({status:false,message:"college name is not given"})
 
-<<<<<<< HEAD
-      if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
-
-=======
         if(!isValid(data.collegeName)) return res.status(400).send({status:false,message:"college name can't be empty"})
          data.collegeName = (data.collegeName).toUpperCase()
->>>>>>> e12fd853d74dedffb773ee9059d01bdc1231eedb
 
       //finding the college in the database collection by collegeName
         let college = await collegeModel.findOne({ name: data.collegeName,isDeleted:false })
